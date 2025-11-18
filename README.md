@@ -1,6 +1,8 @@
 # ToponymExtractor
  Automized toponym extraction pipeline for historical maps. This is the code repository for project "**Automated Toponym Extraction Pipeline for Historical Maps**" under Digital Humanities Lab, EPFL.
 
+ The pipeline achieved 1st place at [ICDAR 2025 MapText Competition](https://rrc.cvc.uab.es/?ch=32&com=evaluation&task=2). The research paper is under review in IJDAR and can be downloaded via [this link](https://infoscience.epfl.ch/entities/publication/66df77d4-357e-4831-9528-712cd4c35d84).
+
 ## Example Showcase
 ![toponym_extractor](/Imgs/toponym_extractor.jpg "illustration")
 
