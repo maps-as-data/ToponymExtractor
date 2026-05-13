@@ -1,6 +1,7 @@
 import os
 from PIL import Image
 import numpy as np
+import math
 
 class ImagePreprocessor:
     def __init__(self, image: Image, overlapping_tolerance = 0.2, num_layers = 3, min_patch_resolution = 256, max_patch_resolution = 2048) -> None:
@@ -13,53 +14,47 @@ class ImagePreprocessor:
         return
     
     # Crop the image into m times m patches and allow overlapping
-    def crop(self, m: int):
+    def crop_by_size(self, p_size: int):
         image_patches = []
-        h, w = self.image.size
+        img_w, img_h = self.image.size
         
-        if h > w:
-            patch_size = int(h/(m - m * self.overlapping_tolerance + self.overlapping_tolerance))
-            grid_size_h = int(patch_size * (1 - self.overlapping_tolerance))
-            grid_size_w = (w - patch_size) // (m - 1)
+        # m = ceil((L - P) / (P * (1 - overlap))) + 1
+        def calc_m_and_stride(length, patch_size, overlap_tol):
+            if patch_size >= length:
+                return 1, 0
+            m = math.ceil((length - patch_size) / (patch_size * (1 - overlap_tol))) + 1
+            stride = (length - patch_size) / (m - 1)
+            return m, stride
 
-        else:
-            patch_size = int(w/(m - m * self.overlapping_tolerance + self.overlapping_tolerance))
-            grid_size_w = int(patch_size * (1 - self.overlapping_tolerance))
-            grid_size_h = (h - patch_size) // (m - 1)
+        m_w, stride_w = calc_m_and_stride(img_w, p_size, self.overlapping_tolerance)
+        m_h, stride_h = calc_m_and_stride(img_h, p_size, self.overlapping_tolerance)
 
-        if grid_size_h * (m - 1) + patch_size >= h or grid_size_w * (m - 1) + patch_size >= w:
-            patch_size -= 1
+        print(f"Level Patch Size: {p_size}, Grid: {m_w}x{m_h}")
 
-        h_offsets = [i * grid_size_h for i in range(m)]
-        w_offsets = [i * grid_size_w for i in range(m)]
-        for h in h_offsets:
-            for w in w_offsets:
-                patch = self.image.crop((h, w, h + patch_size, w + patch_size))
-                image_patches.append({'image': patch, 'offset_x': h, 'offset_y': w})
+        for i in range(m_h):
+            for j in range(m_w):
+                offset_y = int(i * stride_h)
+                offset_x = int(j * stride_w)
+                
+                patch = self.image.crop((offset_x, offset_y, offset_x + p_size, offset_y + p_size))
+                
+                image_patches.append({
+                    'image': patch, 
+                    'offset_x': offset_x, 
+                    'offset_y': offset_y
+                })
         return image_patches
-    
-    def process(self, image: Image = None):
-        if image == None:
-            image = self.image
+
+    def process(self):
+        if self.num_layers <= 1:
+            patch_sizes = [self.min_patch_resolution]
+        else:
+            patch_sizes = np.linspace(self.min_patch_resolution, self.max_patch_resolution, self.num_layers, dtype=int)
         
-        h, w = self.image.size
+        print("Generated layer sizes:", patch_sizes)
 
-        min_pixels = min(h, w)
-
-        min_patches_m = int(min_pixels/(self.max_patch_resolution * (1 + self.overlapping_tolerance))) + 1
-
-        max_patches_m = int(min_pixels/(self.min_patch_resolution * (1 - self.overlapping_tolerance))) + 1
-
-        if min_patches_m < 3:
-            min_patches_m = 3
-
-        # Calculate the number of patches for each layer
-        patches_m = np.linspace(max_patches_m, min_patches_m, self.num_layers, dtype = int)[::-1]
-        print("Cropping patches:", patches_m)
-        # Crop the image into patches
-        for i, m in enumerate(patches_m):
-            image_patches = self.crop(m)
-            self.image_layers[i] = image_patches
+        for i, p_size in enumerate(patch_sizes):
+            self.image_layers[i] = self.crop_by_size(p_size)
 
         return self.image_layers
 
