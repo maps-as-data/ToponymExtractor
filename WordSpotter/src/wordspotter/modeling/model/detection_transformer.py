@@ -2,14 +2,14 @@ import numpy as np
 import torch
 from torch import nn
 import torch.nn.functional as F
-from adet.layers.deformable_transformer import DeformableTransformer
-from adet.utils.misc import (
+from WordSpotter.src.wordspotter.layers.deformable_transformer import DeformableTransformer
+from WordSpotter.src.wordspotter.utils.misc import (
     NestedTensor,
     inverse_sigmoid_offset,
     nested_tensor_from_tensor_list,
     sigmoid_offset
 )
-from adet.modeling.model.utils import MLP
+from WordSpotter.src.wordspotter.modeling.model.utils import MLP
 
 
 class DETECTION_TRANSFORMER(nn.Module):
