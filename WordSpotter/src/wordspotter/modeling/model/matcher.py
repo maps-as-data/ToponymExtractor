@@ -5,7 +5,7 @@ import torch
 from scipy.optimize import linear_sum_assignment
 from torch import nn
 import torch.nn.functional as F
-from WordSpotter.src.wordspotter.utils.curve_utils import BezierSampler
+from wordspotter.utils.curve_utils import BezierSampler
 
 
 class CtrlPointHungarianMatcher(nn.Module):

@@ -6,11 +6,11 @@ import torch.nn.functional as F
 from detectron2.modeling.meta_arch.build import META_ARCH_REGISTRY
 from detectron2.modeling import build_backbone
 from detectron2.structures import ImageList, Instances
-from WordSpotter.src.wordspotter.layers.pos_encoding import PositionalEncoding2D
-from WordSpotter.src.wordspotter.modeling.model.losses import SetCriterion
-from WordSpotter.src.wordspotter.modeling.model.matcher import build_matcher
-from WordSpotter.src.wordspotter.modeling.model.detection_transformer import DETECTION_TRANSFORMER
-from WordSpotter.src.wordspotter.utils.misc import NestedTensor
+from wordspotter.layers.pos_encoding import PositionalEncoding2D
+from wordspotter.modeling.model.losses import SetCriterion
+from wordspotter.modeling.model.matcher import build_matcher
+from wordspotter.modeling.model.detection_transformer import DETECTION_TRANSFORMER
+from wordspotter.utils.misc import NestedTensor
 
 
 class Joiner(nn.Sequential):
