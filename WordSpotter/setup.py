@@ -16,6 +16,7 @@ def get_extensions():
     extensions_dir = os.path.join(this_dir, "src", "wordspotter", "layers", "csrc")
 
     sources = []
+    
     sources.append(os.path.join(extensions_dir, "vision.cpp"))
     sources.append(os.path.join(extensions_dir, "DeformAttn", "cpu", "ms_deform_attn_cpu.cpp"))
     source_cuda = [
@@ -68,6 +69,7 @@ setup(
     url="https://github.com/maps-as-data/ToponymExtractor",
     description="Text detections and recognition framework based on AdelaiDet and detectron2. ",
     packages=find_packages("src"),
+    package_dir={"": "src"},
     python_requires=">=3.9",
     install_requires=[
         "termcolor>=1.1",
