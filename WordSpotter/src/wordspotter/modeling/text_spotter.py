@@ -12,6 +12,8 @@ from wordspotter.modeling.model.matcher import build_matcher
 from wordspotter.modeling.model.detection_transformer import DETECTION_TRANSFORMER
 from wordspotter.utils.misc import NestedTensor
 
+# remove WordSpotter_TransformerPureDetector from the registry if it exists
+META_ARCH_REGISTRY._obj_map.pop("WordSpotter_TransformerPureDetector", None)
 
 class Joiner(nn.Sequential):
     def __init__(self, backbone, position_embedding):
@@ -103,7 +105,7 @@ def detector_postprocess(results, output_height, output_width, min_size=None, ma
 
 
 @META_ARCH_REGISTRY.register()
-class TransformerPureDetector(nn.Module):
+class WordSpotter_TransformerPureDetector(nn.Module):
     """
         Same as :class:`detectron2.modeling.ProposalNetwork`.
         Use one stage detector and a second stage for instance-wise prediction.
