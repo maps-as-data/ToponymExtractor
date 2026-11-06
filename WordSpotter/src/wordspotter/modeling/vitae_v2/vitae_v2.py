@@ -224,7 +224,7 @@ class ViTAEv2(Backbone):
             "stage5": ShapeSpec(channels=512, stride=32),
         }
 
-
+BACKBONE_REGISTRY._obj_map.pop("build_vitaev2_backbone", None) # to avoid duplicate registration of the same backbone
 @BACKBONE_REGISTRY.register()
 def build_vitaev2_backbone(cfg, input_shape):
     vitaev2_type = cfg.MODEL.ViTAEv2.TYPE
