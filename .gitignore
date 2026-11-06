@@ -26,3 +26,5 @@ WordSpotter/build
 rumsey/
 RumseyEval/
 filter.py
+
+*.egg-info
